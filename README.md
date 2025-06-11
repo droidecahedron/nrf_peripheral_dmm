@@ -2,49 +2,131 @@
   <img src="https://github.com/user-attachments/assets/f9970b40-8853-4226-a039-70d478c86104">
 </p>
 
-# nPM PowerUP
-Now, we will work on using nPM PowerUP to control the regulators on the nPM2100-EK.
+# IPC
+In this section, we will add some basic messaging between two threads.
+Looking forward, this is because we will have another task in the next section that will let us be able to see the regulator outputs on something that is not a terminal.
 
 # Step 1
-Unbox your nPM2100 EK, and connect it to your PC with your extra USB-C cable.
+Create a [message queue](https://docs.zephyrproject.org/latest/kernel/services/data_passing/message_queues.html) struct to pass messages from our ADC thread to another thread.
+- Add the following code to `main.c`, you can place it below the LED defines.
+```c
+// can also use zbus, or pass with work container w/ kernel work item.
+struct adc_sample_msg
+{
+    int32_t channel_mv[2];
+};
+K_MSGQ_DEFINE(adc_msgq, sizeof(struct adc_sample_msg), 8,
+              4); // 8 messages, 4-byte alignment
+```
 
-![image](https://github.com/user-attachments/assets/ac3b1409-de8e-4899-b2cb-9ac7c6adfd16)
-
+# Step 2
+Create another thread to be the recipient of the message, as well some thread parameters like before.
+- Add the following `#define`s, you can place them below the aforementioned `adc_sample_msg` struct.
+```c
+#define BLE_NOTIFY_INTERVAL K_MSEC(500)
+#define BLE_THREAD_STACK_SIZE 1024
+#define BLE_THREAD_PRIORITY 5
+```
 
 # Step 3
-Insert your provided battery into its corresponding battery holder, and insert that into the BATTERY INPUT connector on the EK
+Modify `adc_sample_thread` to now populate and send a message.
+- Declare a `adc_sample_msg` struct within the thread, and within the main loop populate the message, log what you populated, send the message, then sleep.
 
-![image](https://github.com/user-attachments/assets/2869d224-5a36-46c8-89d8-eb26258c1507)
+Here is a short snippet highlighting how to accomplish this, followed by a copy-pasteable answer.
+```c
+void adc_sample_thread(void) {
+    //...declarations...
+    struct adc_sample_msg msg;
+    //...initializations...
+    for(;;) {
+        if(...) {}
+        else {
+            msg.channel_mv[i] = (err < 0) ? -1 : val_mv;
+        }
+        LOG_INF("ADC Thread sent: Ch0=%d mV, Ch1=%d mV", msg.channel_mv[0], msg.channel_mv[1]);
+        k_msgq_put(&adc_msgq, &msg, K_FOREVER);
+        k_sleep(ADC_SAMPLE_INTERVAL);
+    }
+}
+```
+
+> The thread should now look similar to the following:
+```c
+void adc_sample_thread(void)
+{
+    int err;
+    int16_t buf[2];
+    struct adc_sequence sequence = {
+        .channels = BIT(adc_channels[0].channel_id) | BIT(adc_channels[1].channel_id),
+        .buffer = buf,
+        .buffer_size = sizeof(buf),
+        .resolution = 14,
+        .calibrate = true,
+    };
+    struct adc_sample_msg msg;
+
+    // Setup each channel
+    for (size_t i = 0; i < ARRAY_SIZE(adc_channels); i++)
+    {
+        if (!adc_is_ready_dt(&adc_channels[i]))
+        {
+            LOG_ERR("ADC controller device %s not ready", adc_channels[i].dev->name);
+            return;
+        }
+        err = adc_channel_setup_dt(&adc_channels[i]);
+        if (err < 0)
+        {
+            LOG_ERR("Could not setup channel #%d (%d)", i, err);
+            return;
+        }
+    }
+
+    for (;;)
+    {
+        err = adc_read(adc_channels->dev, &sequence);
+        if (err < 0)
+        {
+            LOG_ERR("Could not read both channels (%d)", err);
+        }
+        else
+        {
+            // Convert raw values to mV for both channels
+            for (size_t i = 0; i < ARRAY_SIZE(adc_channels); i++)
+            {
+                int32_t val_mv = (int32_t)buf[i]; // You can check buf[i] for a raw sample.
+                err = adc_raw_to_millivolts_dt(&adc_channels[i], &val_mv);
+                msg.channel_mv[i] = (err < 0) ? -1 : val_mv;
+            }
+        }
+        LOG_INF("ADC Thread sent: Ch0=%d mV, Ch1=%d mV", msg.channel_mv[0], msg.channel_mv[1]);
+        k_msgq_put(&adc_msgq, &msg, K_FOREVER);
+        k_sleep(ADC_SAMPLE_INTERVAL);
+    }
+}
+```
 
 # Step 4
-- Using your female-female jumper wires, connect the following:
-  - `Port P1 Pin 11` of the nRF54L15 DK to the `VOUT` header on the nPM2100 EK
-  - `Port P1 Pin 12` of the nRF54L15 DK to the `LS/LDO OUT` header on the nPM2100 EK
-  - and tie the GNDs of the kits together.
-
-![image](https://github.com/user-attachments/assets/d7cd910a-1cfc-484e-952c-9f640de54315)
-
-
-# Step 5
-- Open nRF Connect for Desktop and open nPM PowerUP
-
-![image](https://github.com/user-attachments/assets/22bb55af-fb62-4c20-aa0d-d5ab089d637e)
-
-# Step 6
-- Select your EK as the device
-
-![image](https://github.com/user-attachments/assets/43b16b08-48fd-4226-82f5-91e82970d598)
-
-# Step 7
-- Enable the LS/LDO, the boost should be defaulted to 3V and LDO should default to 800 mV
-
-![image](https://github.com/user-attachments/assets/638a1f73-b799-4566-9e14-6f80e32d2505)
-
-# Step 7
-As you change the configurations of these regulators, you should see those changes reflected in the terminal
+- Create a new thread `ble_write_thread`. This thread, for now, will just wait to receive the message from the adc thread, echo it to the terminal, and sleep for a period. Add the following code close to your BLE defines:
+```c
+void ble_write_thread(void)
+{
+    struct adc_sample_msg msg;
+    for (;;)
+    {
+        // Wait indefinitely for a new ADC sample message from the queue
+        k_msgq_get(&adc_msgq, &msg, K_FOREVER);
+        // At this point, msg.channel_mv[0] and msg.channel_mv[1] contain the
+        // latest ADC results
+        LOG_INF("BLE thread received: Ch0(BOOST)=%d mV, Ch1(LDOLS)=%d mV", msg.channel_mv[0], msg.channel_mv[1]);
+        k_sleep(BLE_NOTIFY_INTERVAL);
+    }
+}
 ```
-[00:01:07.015,270] <inf> main: CH0: 3072 mV
-[00:01:07.015,280] <inf> main: CH1: 808 mV
-[00:01:08.015,442] <inf> main: CH0: 3009 mV
-[00:01:08.015,447] <inf> main: CH1: 805 mV
+along with its accompanying setup macro at the bottom of the file next to the other `K_THREAD_DEFINE`.
+```c
+K_THREAD_DEFINE(ble_write_thread_id, BLE_THREAD_STACK_SIZE, ble_write_thread, NULL, NULL, NULL, BLE_THREAD_PRIORITY, 0,
+                0);
 ```
+
+# Result
+You should now have one thread that sends the message (and reports that it did to the log), and one thread that waits to receive the message, and reports what it received over the log as well.
