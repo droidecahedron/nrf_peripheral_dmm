@@ -26,6 +26,7 @@
 - nRF Connect for Desktop ([Link](https://www.nordicsemi.com/Products/Development-tools/nRF-Connect-for-Desktop/Download#infotabs))
       - Install Serial Terminal app
       - Install nPM PowerUP
+      - Install Board Configurator
 
 
 # Workshop Outline
@@ -59,3 +60,8 @@
 - Select `nrf54l15dk/nrf54l15/cpuapp` as the board target
 - Click Build Configuration on the bottom right<br><img src="https://github.com/user-attachments/assets/059d9f1f-0baf-45f3-8678-daca7a731e24" width="500"/>
 
+## Set up the 54L15DK
+- Plug in your 54L15DK
+- Open nRF Connect for Desktop, and open the board configurator, and configure the 54L15DK to be 3V3 by changing the VDD option and selecting "Write config"
+![image](https://github.com/user-attachments/assets/ddc51fd1-9996-4999-b422-17226a7ace9b)
+  
