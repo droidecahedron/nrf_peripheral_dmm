@@ -2,111 +2,218 @@
   <img src="https://github.com/user-attachments/assets/f9970b40-8853-4226-a039-70d478c86104">
 </p>
 
-# IPC
-In this section, we will add some basic messaging between two threads.
-Looking forward, this is because we will have another task in the next section that will let us be able to see the regulator outputs on something that is not a terminal.
+# BLE
+In this section, we will add the final touch -- making our 54L15 device connectable via our smartphone so that we can see the nPM2100 regulator values in our phone instead of a terminal.
+
+> Note: if you recall from the block diagram in the first readme of the workshop, the 2100 is also a fuel gauge! So it is also feasible to add an i2c bus and be able to send the battery percentage to your phone, but that is not covered in this workshop.
+> *However, this workshop equips you with all the tools necessary to accomplish that.*
+
+We will also add a custom service. 
+
+! This section assumes a lot of working knowledge of BLE, if you wish to dive deeper or re-visit fundamentals, visit the following: [Nordic DevAcademy Bluetooth Low Energy Fundamentals](https://academy.nordicsemi.com/courses/bluetooth-low-energy-fundamentals/).
 
 # Step 1
-Create a [message queue](https://docs.zephyrproject.org/latest/kernel/services/data_passing/message_queues.html) struct to pass messages from our ADC thread to another thread.
-- Add the following code to `main.c`, you can place it below the LED defines.
-```c
-// can also use zbus, or pass with work container w/ kernel work item.
-struct adc_sample_msg
-{
-    int32_t channel_mv[2];
-};
-K_MSGQ_DEFINE(adc_msgq, sizeof(struct adc_sample_msg), 8,
-              4); // 8 messages, 4-byte alignment
+Configure the project to enable BLE features.
+- in `prj.conf`, add the following lines:
 ```
+# Bluetooth LE
+CONFIG_BT=y
+CONFIG_BT_PERIPHERAL=y
+# Replace ZZZZZ with a unique identifier to make scanning for advertisers easier
+CONFIG_BT_DEVICE_NAME="TEARDOWN_ZZZZZ_PMIC"
+CONFIG_BT_MAX_CONN=1
+```
+As the comment notes, replace ZZZZZ with something unique to you to make scanning for your particular device easier.
 
 # Step 2
-Create another thread to be the recipient of the message, as well some thread parameters like before.
-- Add the following `#define`s, you can place them below the aforementioned `adc_sample_msg` struct.
+Add BLE libraries
+- Add the following `#includes` to `main.c`:
 ```c
-#define BLE_NOTIFY_INTERVAL K_MSEC(500)
-#define BLE_THREAD_STACK_SIZE 1024
-#define BLE_THREAD_PRIORITY 5
+#include <zephyr/bluetooth/bluetooth.h>
+#include <zephyr/bluetooth/conn.h>
+#include <zephyr/bluetooth/gatt.h>
+#include <zephyr/bluetooth/hci.h>
+#include <zephyr/bluetooth/uuid.h>
 ```
 
 # Step 3
-Modify `adc_sample_thread` to now populate and send a message.
-- Declare a `adc_sample_msg` struct within the thread, and within the main loop populate the message, log what you populated, send the message, then sleep.
-
-Here is a short snippet highlighting how to accomplish this, followed by a copy-pasteable answer.
+Define a custom GATT service and characteristic UUIDs for collecting the regulator information.
+- Add the following close to the BLE thread `#define`s.
 ```c
-void adc_sample_thread(void) {
-    //...declarations...
-    struct adc_sample_msg msg;
-    //...initializations...
-    for(;;) {
-        if(...) {}
-        else {
-            msg.channel_mv[i] = (err < 0) ? -1 : val_mv;
-        }
-        LOG_INF("ADC Thread sent: Ch0=%d mV, Ch1=%d mV", msg.channel_mv[0], msg.channel_mv[1]);
-        k_msgq_put(&adc_msgq, &msg, K_FOREVER);
-        k_sleep(ADC_SAMPLE_INTERVAL);
-    }
-}
-```
+// Declaration of custom GATT service and characteristics UUIDs
+#define PMIC_HUB_SERVICE_UUID BT_UUID_128_ENCODE(0x69e5204b, 0x8445, 0x5fca, 0xb332, 0xc13064b9dea2)
+#define BOOST_MV_CHARACTERISTIC_UUID BT_UUID_128_ENCODE(0xB0057000, 0x7ea8, 0x4008, 0xb432, 0xb46096c049ba)
+#define LSLDO_MV_CHARACTERISTIC_UUID BT_UUID_128_ENCODE(0x757D0111, 0xd8ee, 0x4faf, 0x956b, 0xafb01c17d0be)
 
-> The thread should now look similar to the following:
-```c
-void adc_sample_thread(void)
-{
-    int err;
-    int16_t buf[2];
-    struct adc_sequence sequence = {
-        .channels = BIT(adc_channels[0].channel_id) | BIT(adc_channels[1].channel_id),
-        .buffer = buf,
-        .buffer_size = sizeof(buf),
-        .resolution = 14,
-        .calibrate = true,
-    };
-    struct adc_sample_msg msg;
+#define BT_UUID_PMIC_HUB BT_UUID_DECLARE_128(PMIC_HUB_SERVICE_UUID)
+#define BT_UUID_PMIC_HUB_BOOST_MV BT_UUID_DECLARE_128(BOOST_MV_CHARACTERISTIC_UUID)
+#define BT_UUID_PMIC_HUB_LSLDO_MV BT_UUID_DECLARE_128(LSLDO_MV_CHARACTERISTIC_UUID)
 
-    // Setup each channel
-    for (size_t i = 0; i < ARRAY_SIZE(adc_channels); i++)
-    {
-        if (!adc_is_ready_dt(&adc_channels[i]))
-        {
-            LOG_ERR("ADC controller device %s not ready", adc_channels[i].dev->name);
-            return;
-        }
-        err = adc_channel_setup_dt(&adc_channels[i]);
-        if (err < 0)
-        {
-            LOG_ERR("Could not setup channel #%d (%d)", i, err);
-            return;
-        }
-    }
-
-    for (;;)
-    {
-        err = adc_read(adc_channels->dev, &sequence);
-        if (err < 0)
-        {
-            LOG_ERR("Could not read both channels (%d)", err);
-        }
-        else
-        {
-            // Convert raw values to mV for both channels
-            for (size_t i = 0; i < ARRAY_SIZE(adc_channels); i++)
-            {
-                int32_t val_mv = (int32_t)buf[i]; // You can check buf[i] for a raw sample.
-                err = adc_raw_to_millivolts_dt(&adc_channels[i], &val_mv);
-                msg.channel_mv[i] = (err < 0) ? -1 : val_mv;
-            }
-        }
-        LOG_INF("ADC Thread sent: Ch0=%d mV, Ch1=%d mV", msg.channel_mv[0], msg.channel_mv[1]);
-        k_msgq_put(&adc_msgq, &msg, K_FOREVER);
-        k_sleep(ADC_SAMPLE_INTERVAL);
-    }
-}
+#define DEVICE_NAME CONFIG_BT_DEVICE_NAME // from prj.conf
+#define DEVICE_NAME_LEN (sizeof(DEVICE_NAME) - 1)
 ```
 
 # Step 4
-- Create a new thread `ble_write_thread`. This thread, for now, will just wait to receive the message from the adc thread, echo it to the terminal, and sleep for a period. Add the following code close to your BLE defines:
+Prepare advertising, scan response, and corresponding packets, as well as CCCD callback.
+- Add the following code after the defines:
+```c
+static const struct bt_le_adv_param *adv_param =
+    BT_LE_ADV_PARAM((BT_LE_ADV_OPT_CONN | BT_LE_ADV_OPT_USE_IDENTITY), /* Connectable advertising and use
+                                                                          identity address */
+                    800,   /* Min Advertising Interval 500ms (800*0.625ms) 16383 max*/
+                    801,   /* Max Advertising Interval 500.625ms (801*0.625ms) 16384 max*/
+                    NULL); /* Set to NULL for undirected advertising */
+
+static struct k_work adv_work;
+static const struct bt_data ad[] = {
+    BT_DATA_BYTES(BT_DATA_FLAGS, (BT_LE_AD_GENERAL | BT_LE_AD_NO_BREDR)),
+    BT_DATA(BT_DATA_NAME_COMPLETE, DEVICE_NAME, DEVICE_NAME_LEN),
+};
+
+static const struct bt_data sd[] = {
+    BT_DATA_BYTES(BT_DATA_UUID128_ALL, PMIC_HUB_SERVICE_UUID),
+};
+```
+
+# Step 5
+Define GATT service and CCCD callback.
+- Add the following after step 4's code:
+```c
+/*This function is called whenever the Client Characteristic Control Descriptor
+(CCCD) has been changed by the GATT client, for each of the characteristics*/
+static void on_cccd_changed(const struct bt_gatt_attr *attr, uint16_t value)
+{
+    ARG_UNUSED(attr);
+    switch (value)
+    {
+    case BT_GATT_CCC_NOTIFY:
+        break;
+    case 0:
+        break;
+    default:
+        LOG_ERR("Error, CCCD has been set to an invalid value");
+    }
+}
+
+BT_GATT_SERVICE_DEFINE(pmic_hub, BT_GATT_PRIMARY_SERVICE(BT_UUID_PMIC_HUB),
+
+                       BT_GATT_CHARACTERISTIC(BT_UUID_PMIC_HUB_BOOST_MV, BT_GATT_CHRC_NOTIFY, BT_GATT_PERM_READ, NULL,
+                                              NULL, NULL),
+                       BT_GATT_CCC(on_cccd_changed, BT_GATT_PERM_READ | BT_GATT_PERM_WRITE),
+
+                       BT_GATT_CHARACTERISTIC(BT_UUID_PMIC_HUB_LSLDO_MV, BT_GATT_CHRC_NOTIFY, BT_GATT_PERM_READ, NULL,
+                                              NULL, NULL),
+                       BT_GATT_CCC(on_cccd_changed, BT_GATT_PERM_READ | BT_GATT_PERM_WRITE), );
+```
+
+# Step 6
+Add Bluetooth connection callbacks and globals to handle the various states and actions the peripheral requires.
+This also uses [Kernel Work Queues](https://docs.zephyrproject.org/latest/kernel/services/threads/workqueue.html) for the process of starting advertising.
+One of the globals that will be particularly for us later in the code is the connection handle.
+Earlier in the workshop we `#define`d a `BLE_STATE_LED`. Now we can use it in our `connected` and `disconnected` callbacks to have an indicator on the DK let us know our connection state!
+- Add the following code:
+```c
+// BT globals and callbacks
+struct bt_conn *m_connection_handle = NULL;
+static void adv_work_handler(struct k_work *work)
+{
+    int err = bt_le_adv_start(adv_param, ad, ARRAY_SIZE(ad), sd, ARRAY_SIZE(sd));
+    if (err)
+    {
+        LOG_INF("Advertising failed to start (err %d)", err);
+        return;
+    }
+
+    LOG_INF("Advertising successfully started");
+}
+
+static void advertising_start(void)
+{
+    k_work_submit(&adv_work);
+}
+
+static void recycled_cb(void)
+{
+    LOG_INF("Connection object available from previous conn. Disconnect is "
+            "complete!");
+    advertising_start();
+}
+
+static void connected(struct bt_conn *conn, uint8_t err)
+{
+    if (err)
+    {
+        LOG_WRN("Connection failed (err %u)", err);
+        return;
+    }
+    m_connection_handle = conn;
+    LOG_INF("Connected");
+    dk_set_led_on(BLE_STATE_LED);
+}
+
+static void disconnected(struct bt_conn *conn, uint8_t reason)
+{
+    LOG_INF("Disconnected (reason %u)", reason);
+    m_connection_handle = NULL;
+    dk_set_led_off(BLE_STATE_LED);
+}
+
+struct bt_conn_cb connection_callbacks = {
+    .connected = connected,
+    .disconnected = disconnected,
+    .recycled = recycled_cb,
+};
+```
+
+# Step 7
+Since we've already gotten to the step that we can modify the regulator outputs with nPM PowerUP, and seen that those values are collected in the adc thread, then passed to the BLE Write thread, we will now add helper functions that will report the regulator values to the mobile device via notifications. 
+We also want to make sure that the mobile side is prepared to receive the notifications, so we can add some conditionals to help facilitate that.
+- Add the following functions:
+```c
+static void ble_report_boost_mv(struct bt_conn *conn, const uint32_t *data, uint16_t len)
+{
+    const struct bt_gatt_attr *attr = &pmic_hub.attrs[2];
+    struct bt_gatt_notify_params params = {
+        .uuid = BT_UUID_PMIC_HUB_BOOST_MV, .attr = attr, .data = data, .len = len, .func = NULL};
+
+    if (bt_gatt_is_subscribed(conn, attr, BT_GATT_CCC_NOTIFY))
+    {
+        if (bt_gatt_notify_cb(conn, &params))
+        {
+            LOG_ERR("Error, unable to send notification");
+        }
+    }
+    else
+    {
+        LOG_WRN("Warning, notification not enabled for boost mv characteristic");
+    }
+}
+
+static void ble_report_lsldo_mv(struct bt_conn *conn, const uint32_t *data, uint16_t len)
+{
+    const struct bt_gatt_attr *attr = &pmic_hub.attrs[5];
+
+    struct bt_gatt_notify_params params = {
+        .uuid = BT_UUID_PMIC_HUB_LSLDO_MV, .attr = attr, .data = data, .len = len, .func = NULL};
+
+    if (bt_gatt_is_subscribed(conn, attr, BT_GATT_CCC_NOTIFY))
+    {
+        // Send the notification
+        if (bt_gatt_notify_cb(conn, &params))
+        {
+            LOG_ERR("Error, unable to send notification");
+        }
+    }
+    else
+    {
+        LOG_WRN("Warning, notification not enabled for lsldo mv characteristic");
+    }
+}
+```
+
+# Step 8
+Now we need to modify our `ble_write_thread` to send notifications *if* the device is connected!
+- Update the ble_write_thread to use the helper functions previously defined if there is a valid connection context. Here is a pasteable example:
 ```c
 void ble_write_thread(void)
 {
@@ -118,21 +225,60 @@ void ble_write_thread(void)
         // At this point, msg.channel_mv[0] and msg.channel_mv[1] contain the
         // latest ADC results
         LOG_INF("BLE thread received: Ch0(BOOST)=%d mV, Ch1(LDOLS)=%d mV", msg.channel_mv[0], msg.channel_mv[1]);
+
+        if (m_connection_handle) // if ble connection present
+        {
+            ble_report_boost_mv(m_connection_handle, &msg.channel_mv[0], sizeof(msg.channel_mv[0]));
+            ble_report_lsldo_mv(m_connection_handle, &msg.channel_mv[1], sizeof(msg.channel_mv[1]));
+        }
+        else
+        {
+            LOG_INF("BLE Thread does not detect an active BLE connection");
+        }
+
         k_sleep(BLE_NOTIFY_INTERVAL);
     }
 }
 ```
-along with its accompanying setup macro at the bottom of the file next to the other `K_THREAD_DEFINE`.
+
+# Step 9
+Now we need to have our main thread initialize BLE and get the show going!
+- Modify `main()` thread with BLE inits, initialization of the `k_work` item, and register the relevant callbacks. The main thread should look like the following:
 ```c
-K_THREAD_DEFINE(ble_write_thread_id, BLE_THREAD_STACK_SIZE, ble_write_thread, NULL, NULL, NULL, BLE_THREAD_PRIORITY, 0,
-                0);
+int main(void)
+{
+    int err;
+    int blink = 0;
+
+    err = dk_leds_init();
+    if (err)
+    {
+        LOG_ERR("LEDs init failed (err %d)", err);
+        return -1;
+    }
+
+    // Setting up Bluetooth
+    err = bt_enable(NULL);
+    if (err)
+    {
+        LOG_ERR("Bluetooth init failed (err %d)", err);
+        return -1;
+    }
+    LOG_INF("Bluetooth initialized");
+    if (IS_ENABLED(CONFIG_SETTINGS))
+    {
+        settings_load();
+    }
+    bt_conn_cb_register(&connection_callbacks);
+    k_work_init(&adv_work, adv_work_handler);
+    advertising_start();
+
+    for (;;)
+    {
+        dk_set_led(DK_STATUS_LED, (++blink) % 2);
+        k_sleep(K_MSEC(2000));
+    }
+    return 0;
+}
 ```
 
-# Result
-You should now have one thread that sends the message (and reports that it did to the log), and one thread that waits to receive the message, and reports what it received over the log as well.
-```
-[00:00:33.008,993] <inf> main: ADC Thread sent: Ch0=3058 mV, Ch1=801 mV
-[00:00:33.009,014] <inf> main: BLE thread received: Ch0(BOOST)=3058 mV, Ch1(LDOLS)=801 mV
-[00:00:34.009,172] <inf> main: ADC Thread sent: Ch0=3069 mV, Ch1=805 mV
-[00:00:34.009,196] <inf> main: BLE thread received: Ch0(BOOST)=3069 mV, Ch1(LDOLS)=805 mV
-```
