@@ -44,3 +44,18 @@
     - Intro to nRF Connect for Desktop
     - Intro to VS Code and Nordic VSC Extensions
     - Hands on
+   
+# Hands on
+## Add the application to VSCode:
+- Clone this repo
+- Click on the nRF Connect icon in the left hand ribbon
+- Click on Open an existing application
+- Select the directory of this repository
+- Click Open:<br><img src="https://github.com/user-attachments/assets/4777afa9-32f5-4167-940f-13b3a8900b4d" width="500"/>
+
+
+## Under Applications at the bottom of the left pane 
+- Click on Add build configuration 
+- Select `nrf54l15dk/nrf54l15/cpuapp` as the board target
+- Click Build Configuration on the bottom right<br><img src="https://github.com/user-attachments/assets/059d9f1f-0baf-45f3-8678-daca7a731e24" width="500"/>
+
