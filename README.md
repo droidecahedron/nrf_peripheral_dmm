@@ -130,3 +130,9 @@ K_THREAD_DEFINE(ble_write_thread_id, BLE_THREAD_STACK_SIZE, ble_write_thread, NU
 
 # Result
 You should now have one thread that sends the message (and reports that it did to the log), and one thread that waits to receive the message, and reports what it received over the log as well.
+```
+[00:00:33.008,993] <inf> main: ADC Thread sent: Ch0=3058 mV, Ch1=801 mV
+[00:00:33.009,014] <inf> main: BLE thread received: Ch0(BOOST)=3058 mV, Ch1(LDOLS)=801 mV
+[00:00:34.009,172] <inf> main: ADC Thread sent: Ch0=3069 mV, Ch1=805 mV
+[00:00:34.009,196] <inf> main: BLE thread received: Ch0(BOOST)=3069 mV, Ch1(LDOLS)=805 mV
+```

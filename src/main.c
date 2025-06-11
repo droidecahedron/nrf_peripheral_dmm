@@ -11,6 +11,32 @@ LOG_MODULE_REGISTER(main, LOG_LEVEL_INF);
 #define DK_STATUS_LED DK_LED1
 #define BLE_STATE_LED DK_LED2
 
+// can also use zbus, or pass with work container w/ kernel work item.
+struct adc_sample_msg
+{
+    int32_t channel_mv[2];
+};
+K_MSGQ_DEFINE(adc_msgq, sizeof(struct adc_sample_msg), 8,
+              4); // 8 messages, 4-byte alignment
+
+#define BLE_NOTIFY_INTERVAL K_MSEC(500)
+#define BLE_THREAD_STACK_SIZE 1024
+#define BLE_THREAD_PRIORITY 5
+
+void ble_write_thread(void)
+{
+    struct adc_sample_msg msg;
+    for (;;)
+    {
+        // Wait indefinitely for a new ADC sample message from the queue
+        k_msgq_get(&adc_msgq, &msg, K_FOREVER);
+        // At this point, msg.channel_mv[0] and msg.channel_mv[1] contain the
+        // latest ADC results
+        LOG_INF("BLE thread received: Ch0(BOOST)=%d mV, Ch1(LDOLS)=%d mV", msg.channel_mv[0], msg.channel_mv[1]);
+        k_sleep(BLE_NOTIFY_INTERVAL);
+    }
+}
+
 //~~~~ ADC ~~~~//
 #define ADC_THREAD_STACK_SIZE 1024
 #define ADC_THREAD_PRIORITY 5
@@ -34,6 +60,7 @@ void adc_sample_thread(void)
         .resolution = 14,
         .calibrate = true,
     };
+    struct adc_sample_msg msg;
 
     // Setup each channel
     for (size_t i = 0; i < ARRAY_SIZE(adc_channels); i++)
@@ -65,9 +92,11 @@ void adc_sample_thread(void)
             {
                 int32_t val_mv = (int32_t)buf[i]; // You can check buf[i] for a raw sample.
                 err = adc_raw_to_millivolts_dt(&adc_channels[i], &val_mv);
-                LOG_INF("CH%d: %d mV", i, val_mv);
+                msg.channel_mv[i] = (err < 0) ? -1 : val_mv;
             }
         }
+        LOG_INF("ADC Thread sent: Ch0=%d mV, Ch1=%d mV", msg.channel_mv[0], msg.channel_mv[1]);
+        k_msgq_put(&adc_msgq, &msg, K_FOREVER);
         k_sleep(ADC_SAMPLE_INTERVAL);
     }
 }
@@ -95,3 +124,6 @@ int main(void)
 // add a thread for SAADC sampling
 K_THREAD_DEFINE(adc_sample_thread_id, ADC_THREAD_STACK_SIZE, adc_sample_thread, NULL, NULL, NULL, ADC_THREAD_PRIORITY,
                 0, 0);
+K_THREAD_DEFINE(ble_write_thread_id, BLE_THREAD_STACK_SIZE, ble_write_thread, NULL, NULL, NULL, BLE_THREAD_PRIORITY, 0,
+                0);
+                
