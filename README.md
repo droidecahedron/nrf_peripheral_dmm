@@ -226,3 +226,14 @@ K_THREAD_DEFINE(adc_sample_thread_id, ADC_THREAD_STACK_SIZE, adc_sample_thread, 
 
 # Result
 You should have an LED toggle every two seconds after flashing, and if you connect to VCOM1 of the DK via USB at `115200,8,n,1,N`, you should see it print the sample results for each channel. It is OK that nothing is hooked up and those pins are floating -- we are just setting it up for the next step.
+
+> Your output should look like this...
+```
+*** Booting nRF Connect SDK v3.0.1-9eb5615da66b ***
+*** Using Zephyr OS v4.0.99-77f865b8f8d0 ***
+[00:00:00.002,295] <inf> main: CH0: 147 mV
+[00:00:00.002,301] <inf> main: CH1: 0 mV
+[00:00:01.002,535] <inf> main: CH0: 151 mV
+[00:00:01.002,545] <inf> main: CH1: 0 mV
+[00:00:02.002,706] <inf> main: CH0: 151 mV
+```
