@@ -1,8 +1,14 @@
-<p align="center">
-  <img src="https://github.com/user-attachments/assets/f9970b40-8853-4226-a039-70d478c86104">
-</p>
-
 # ADC
+## Progresion Path
+```mermaid
+graph LR;
+  main-->adc*;
+  adc*-->npm_powerup;
+  npm_powerup-->ipc;
+  ipc-->ble;
+```
+> `*` == your current location
+
 ## Preface
 We will be using two SAADC channels on the 54L15 to read the regulator outputs from the nPM2100.
 The nRF54L15 sports a SAADC peripheral, or a differential successive approximation register (SAR) analog-to-digital converter.
@@ -223,6 +229,13 @@ Create the ADC thread.
 K_THREAD_DEFINE(adc_sample_thread_id, ADC_THREAD_STACK_SIZE, adc_sample_thread, NULL, NULL, NULL, ADC_THREAD_PRIORITY,
                 0, 0);
 ```
+
+## Step 9
+Flash your device.
+- Click the following button to flash your detected DK.
+
+  ![image](https://github.com/user-attachments/assets/2be936a5-993d-4532-a298-42b18650cf7b)
+
 
 # Result
 You should have an LED toggle every two seconds after flashing, and if you connect to VCOM1 of the DK via USB at `115200,8,n,1,N`, you should see it print the sample results for each channel. It is OK that nothing is hooked up and those pins are floating -- we are just setting it up for the next step.
