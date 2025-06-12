@@ -1,12 +1,19 @@
-<p align="center">
-  <img src="https://github.com/user-attachments/assets/f9970b40-8853-4226-a039-70d478c86104">
-</p>
-
 # IPC
+## Progresion Path
+```mermaid
+graph LR;
+  main-->adc;
+  adc-->npm_powerup;
+  npm_powerup-->ipc*;
+  ipc*-->ble;
+```
+> `*` == your current location
+
+## Preface
 In this section, we will add some basic messaging between two threads.
 Looking forward, this is because we will have another task in the next section that will let us be able to see the regulator outputs on something that is not a terminal.
 
-# Step 1
+## Step 1
 Create a [message queue](https://docs.zephyrproject.org/latest/kernel/services/data_passing/message_queues.html) struct to pass messages from our ADC thread to another thread.
 - Add the following code to `main.c`, you can place it below the LED defines.
 ```c
@@ -19,7 +26,7 @@ K_MSGQ_DEFINE(adc_msgq, sizeof(struct adc_sample_msg), 8,
               4); // 8 messages, 4-byte alignment
 ```
 
-# Step 2
+## Step 2
 Create another thread to be the recipient of the message, as well some thread parameters like before.
 - Add the following `#define`s, you can place them below the aforementioned `adc_sample_msg` struct.
 ```c
@@ -28,7 +35,7 @@ Create another thread to be the recipient of the message, as well some thread pa
 #define BLE_THREAD_PRIORITY 5
 ```
 
-# Step 3
+## Step 3
 Modify `adc_sample_thread` to now populate and send a message.
 - Declare a `adc_sample_msg` struct within the thread, and within the main loop populate the message, log what you populated, send the message, then sleep.
 
@@ -105,7 +112,7 @@ void adc_sample_thread(void)
 }
 ```
 
-# Step 4
+## Step 4
 - Create a new thread `ble_write_thread`. This thread, for now, will just wait to receive the message from the adc thread, echo it to the terminal, and sleep for a period. Add the following code close to your BLE defines:
 ```c
 void ble_write_thread(void)
@@ -128,7 +135,10 @@ K_THREAD_DEFINE(ble_write_thread_id, BLE_THREAD_STACK_SIZE, ble_write_thread, NU
                 0);
 ```
 
-# Result
+## Step 5
+Flash your device as you did in the adc branch.
+
+## Result
 You should now have one thread that sends the message (and reports that it did to the log), and one thread that waits to receive the message, and reports what it received over the log as well.
 ```
 [00:00:33.008,993] <inf> main: ADC Thread sent: Ch0=3058 mV, Ch1=801 mV
@@ -136,3 +146,6 @@ You should now have one thread that sends the message (and reports that it did t
 [00:00:34.009,172] <inf> main: ADC Thread sent: Ch0=3069 mV, Ch1=805 mV
 [00:00:34.009,196] <inf> main: BLE thread received: Ch0(BOOST)=3069 mV, Ch1(LDOLS)=805 mV
 ```
+
+## Move to the ble branch for the next set of instructions: [➡️LINK](https://github.com/droidecahedron/Teardown-2025/tree/ble)
+### Move to the ipc_soln branch if you are stuck and need a lift: [🫱LINK](https://github.com/droidecahedron/Teardown-2025/tree/ipc_soln)
