@@ -282,3 +282,29 @@ int main(void)
 }
 ```
 
+# Step 10 / Result
+From here, all the pieces are together, now we can flash it and see on our app!
+- Flash the device
+- Your log will say something like the following until you connect with your phone:
+  ```
+  [00:01:54.027,752] <inf> main: ADC Thread sent: Ch0=3072 mV, Ch1=805 mV
+  [00:01:54.027,777] <inf> main: BLE thread received: Ch0(BOOST)=3072 mV, Ch1(LDOLS)=805 mV
+  [00:01:54.027,797] <wrn> main: Warning, notification not enabled for boost mv characteristic
+  [00:01:54.027,812] <wrn> main: Warning, notification not enabled for lsldo mv characteristic
+  ```
+  Since we are not connected!
+- Open nRF Connect mobile app on your iOS or Android device
+- Press the dropdown for the scanner's Filter, enable 'name' filtering and enter `TEARDOWN_ZZZZZ`, where `ZZZZZ` is the unique identifier specific to you from step 1.
+- Connect
+  ![image](https://github.com/user-attachments/assets/bd2ee1c0-cce7-4da7-b2b3-fc5bf15bd5cd)
+- Navigate to the characteristics tab, enable notifications for the `757D0....` characteristic and the `B0057....` characteristic (Which are `LSLDO` and `BOOST` respectively) with the down arrow logo.
+- Change the number format with the `"` logo to int32 or uint32 depending on how you set up the helper functions.
+  ![image](https://github.com/user-attachments/assets/48f599f9-a29f-4a21-ba30-d43d39dabb11)
+- Your phone should now be receiving the boost and ldo/ls regulator output voltages in mv, corresponding with your log and the gui! (Your log should also no longer be complaining about the lack of connection)
+  ![image](https://github.com/user-attachments/assets/d5c6dda3-74a9-41f9-8b15-2b007f5d94b2)
+```
+[00:02:09.030,876] <inf> main: ADC Thread sent: Ch0=3002 mV, Ch1=805 mV
+[00:02:09.030,894] <inf> main: BLE thread received: Ch0(BOOST)=3002 mV, Ch1(LDOLS)=805 mV
+``` 
+
+## Congratulations! You finished!
