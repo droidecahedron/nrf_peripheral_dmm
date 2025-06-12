@@ -29,8 +29,11 @@
 
 ### Extra tools
 - nRF Connect for Desktop ([Link](https://www.nordicsemi.com/Products/Development-tools/nRF-Connect-for-Desktop/Download#infotabs))
+
       - Install Serial Terminal app
+  
       - Install nPM PowerUP
+  
       - Install Board Configurator
 - nRF Connect for Mobile ([Link](https://www.nordicsemi.com/Products/Development-tools/nRF-Connect-for-mobile)) for iOS/Android
 
