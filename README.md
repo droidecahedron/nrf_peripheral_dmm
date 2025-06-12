@@ -1,5 +1,6 @@
+
 # IPC
-## Progresion Path
+## Progression Path
 ```mermaid
 graph LR;
   main-->adc;
@@ -148,4 +149,3 @@ You should now have one thread that sends the message (and reports that it did t
 ```
 
 ## Move to the ble branch for the next set of instructions: [➡️LINK](https://github.com/droidecahedron/Teardown-2025/tree/ble)
-### Move to the ipc_soln branch if you are stuck and need a lift: [🫱LINK](https://github.com/droidecahedron/Teardown-2025/tree/ipc_soln)
