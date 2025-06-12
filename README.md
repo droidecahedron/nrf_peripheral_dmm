@@ -1,8 +1,14 @@
-<p align="center">
-  <img src="https://github.com/user-attachments/assets/f9970b40-8853-4226-a039-70d478c86104">
-</p>
-
 # ADC
+## Progresion Path
+```mermaid
+graph LR;
+  main-->adc*;
+  adc*-->npm_powerup;
+  npm_powerup-->ipc;
+  ipc-->ble;
+```
+> `*` == your current location
+
 ## Preface
 We will be using two SAADC channels on the 54L15 to read the regulator outputs from the nPM2100.
 The nRF54L15 sports a SAADC peripheral, or a differential successive approximation register (SAR) analog-to-digital converter.
@@ -224,5 +230,34 @@ K_THREAD_DEFINE(adc_sample_thread_id, ADC_THREAD_STACK_SIZE, adc_sample_thread, 
                 0, 0);
 ```
 
+## Step 9
+Flash your device.
+- Click the following button to flash your detected DK.
+
+  ![image](https://github.com/user-attachments/assets/2be936a5-993d-4532-a298-42b18650cf7b)
+
+## Step 10
+Connect to the log output com port. (*Make sure you've disconnected the 54L15DK from the board configurator and the serial port is free!*)
+- The default UART settings are `115200,8,n,1,N`. The VSC Extension GUI will give you a single button click for this in the top center of your screen after you click the 'connect' button.
+  ![image](https://github.com/user-attachments/assets/b42af1fa-e641-4601-a252-cc53a4a373c8)
+
+  ![image](https://github.com/user-attachments/assets/a61ac40e-ef29-4cd0-a2f2-203306f9cb10)
+
+
 # Result
-You should have an LED toggle every two seconds after flashing, and if you connect to VCOM1 of the DK via USB at `115200,8,n,1,N`, you should see it print the sample results for each channel. It is OK that nothing is hooked up and those pins are floating -- we are just setting it up for the next step.
+You should have an LED toggle every two seconds after flashing, and when you connect to VCOM1 of the DK via USB at `115200,8,n,1,N`, you should see it print the sample results for each channel. It is OK that nothing is hooked up and those pins are floating -- we are just setting it up for the next step.
+
+> Your output should look like this...
+```
+*** Booting nRF Connect SDK v3.0.1-9eb5615da66b ***
+*** Using Zephyr OS v4.0.99-77f865b8f8d0 ***
+[00:00:00.002,295] <inf> main: CH0: 147 mV
+[00:00:00.002,301] <inf> main: CH1: 0 mV
+[00:00:01.002,535] <inf> main: CH0: 151 mV
+[00:00:01.002,545] <inf> main: CH1: 0 mV
+[00:00:02.002,706] <inf> main: CH0: 151 mV
+```
+
+
+## Move to the ipc branch for the next set of instructions: [➡️LINK](https://github.com/droidecahedron/Teardown-2025/tree/ipc)
+### Move to the adc_soln branch if you are stuck and need a lift: [🫱LINK](https://github.com/droidecahedron/Teardown-2025/tree/ipc_soln)
