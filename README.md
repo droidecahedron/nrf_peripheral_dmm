@@ -236,9 +236,16 @@ Flash your device.
 
   ![image](https://github.com/user-attachments/assets/2be936a5-993d-4532-a298-42b18650cf7b)
 
+## Step 10
+Connect to the log output com port. (*Make sure you've disconnected the 54L15DK from the board configurator and the serial port is free!*)
+- The default UART settings are `115200,8,n,1,N`. The VSC Extension GUI will give you a single button click for this in the top center of your screen after you click the 'connect' button.
+  ![image](https://github.com/user-attachments/assets/b42af1fa-e641-4601-a252-cc53a4a373c8)
+
+  ![image](https://github.com/user-attachments/assets/a61ac40e-ef29-4cd0-a2f2-203306f9cb10)
+
 
 # Result
-You should have an LED toggle every two seconds after flashing, and if you connect to VCOM1 of the DK via USB at `115200,8,n,1,N`, you should see it print the sample results for each channel. It is OK that nothing is hooked up and those pins are floating -- we are just setting it up for the next step.
+You should have an LED toggle every two seconds after flashing, and when you connect to VCOM1 of the DK via USB at `115200,8,n,1,N`, you should see it print the sample results for each channel. It is OK that nothing is hooked up and those pins are floating -- we are just setting it up for the next step.
 
 > Your output should look like this...
 ```
@@ -253,4 +260,4 @@ You should have an LED toggle every two seconds after flashing, and if you conne
 
 
 ## Move to the ipc branch for the next set of instructions: [➡️LINK](https://github.com/droidecahedron/Teardown-2025/tree/ipc)
-## Move to the adc_soln branch if you are stuck and need a lift: [🫱LINK](https://github.com/droidecahedron/Teardown-2025/tree/ipc_soln)
+### Move to the adc_soln branch if you are stuck and need a lift: [🫱LINK](https://github.com/droidecahedron/Teardown-2025/tree/ipc_soln)
