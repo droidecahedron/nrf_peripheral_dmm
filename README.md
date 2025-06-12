@@ -250,3 +250,7 @@ You should have an LED toggle every two seconds after flashing, and if you conne
 [00:00:01.002,545] <inf> main: CH1: 0 mV
 [00:00:02.002,706] <inf> main: CH0: 151 mV
 ```
+
+
+## Move to the ipc branch for the next set of instructions: [➡️LINK](https://github.com/droidecahedron/Teardown-2025/tree/ipc)
+## Move to the adc_soln branch if you are stuck and need a lift: [🫱LINK](https://github.com/droidecahedron/Teardown-2025/tree/ipc_soln)
