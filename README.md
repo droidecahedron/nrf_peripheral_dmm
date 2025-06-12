@@ -261,4 +261,3 @@ You should have an LED toggle every two seconds after flashing, and when you con
 
 
 ## Move to the npm_powerup branch for the next set of instructions: [➡️LINK](https://github.com/droidecahedron/Teardown-2025/tree/npm_powerup)
-### Move to the adc_soln branch if you are stuck and need a lift: [🫱LINK](https://github.com/droidecahedron/Teardown-2025/tree/adc_soln)
