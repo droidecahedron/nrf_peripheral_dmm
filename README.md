@@ -3,8 +3,8 @@
 </p>
 
 
-# Required Materials
-## Hardware
+# Prerequisites and Required Material
+## Hardware (provided by Nordic)
 - nRF54L15 DK
   
   <img src="https://github.com/user-attachments/assets/a302e826-4cca-405f-9982-6da59a2ac740" width=15% height=15% >
@@ -16,12 +16,17 @@
   <img src="https://github.com/user-attachments/assets/2121c4c3-cc36-45a3-8c62-b9a9f24ef1bd" width=10% height=10%>
 - AA Battery (other types work as well) 
 
+- Laptop 💻 **setup with software ahead of time**
 
-
-- Laptop 💻 setup with software ahead of time
 ## Software
+> [!IMPORTANT]  
+> You must complete the first lesson of the [Nordic DevAcademy](https://academy.nordicsemi.com/courses/nrf-connect-sdk-fundamentals/) for this workshop.
+> 
+> You must be able to build and be able to flash a blank application. If you do not have a DK, at the very least a successful build system is required.
+> **These are large downloads and take a long time. Please complete before the workshop.**
+ 
 ### Installing and setting up nRF Connect SDK (NCS) 🔗[LINK](https://academy.nordicsemi.com/courses/nrf-connect-sdk-fundamentals/lessons/lesson-1-nrf-connect-sdk-introduction/topic/exercise-1-1/)
-**These are large downloads and take a long time. Please complete before the workshop.**
+
 ### Extra tools
 - nRF Connect for Desktop ([Link](https://www.nordicsemi.com/Products/Development-tools/nRF-Connect-for-Desktop/Download#infotabs))
       - Install Serial Terminal app
