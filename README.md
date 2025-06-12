@@ -81,4 +81,4 @@ If you haven't, here is a link, but expect to be left behind! [🔗LINK](https:/
 - Open nRF Connect for Desktop, and open the board configurator, and configure the 54L15DK to be 3V3 by changing the VDD option and selecting "Write config"
 ![image](https://github.com/user-attachments/assets/ddc51fd1-9996-4999-b422-17226a7ace9b)
   
-## Move to the ADC branch for the next set of instructions: [➡️LINK](https://github.com/droidecahedron/Teardown-2025/tree/adc)
+## Move to the adc branch for the next set of instructions: [➡️LINK](https://github.com/droidecahedron/Teardown-2025/tree/adc)
