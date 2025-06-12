@@ -31,13 +31,13 @@
 
 # Workshop Outline
   - Intro Slides / chalk talk
-    - Intro to [nPM2100]((https://www.nordicsemi.com/Products/nPM2100))
+    - Intro to [nPM2100](https://www.nordicsemi.com/Products/nPM2100)
 
     ![image](https://github.com/user-attachments/assets/61a9bba4-a6a8-4c0e-b408-96652dedbf6e) ![image](https://github.com/user-attachments/assets/e9c93a15-8e9c-4d44-9e95-fb33623bb81b)
 
 
 
-    - Intro to [nRF54L15]((https://www.nordicsemi.com/Products/nRF54L15))
+    - Intro to [nRF54L15](https://www.nordicsemi.com/Products/nRF54L15)
 
       ![image](https://github.com/user-attachments/assets/cd4bdc06-cc35-4a3f-a709-0603bdeb2a2e) ![image](https://github.com/user-attachments/assets/55432e64-a309-4714-852c-e00bbddfbf54)
 
