@@ -47,7 +47,7 @@
     - Hands on
    
 # Hands on
-## Goal and Progresion Path
+## Goal and Progression Path
 There are a few branches in this repo, here is the intended progression path for you as you walk through this workshop.
 ```mermaid
 graph LR;
