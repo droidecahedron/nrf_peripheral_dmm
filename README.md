@@ -318,7 +318,7 @@ From here, all the pieces are together, now we can flash it and see on our app!
 [00:02:09.030,894] <inf> main: BLE thread received: Ch0(BOOST)=3002 mV, Ch1(LDOLS)=805 mV
 ``` 
 
-## Congratulations! You finished!
+## 🎊Congratulations! You are done!🎊
 ![image](https://github.com/user-attachments/assets/3dec1a74-baf5-4712-9472-629a97aa0c97) ![image](https://github.com/user-attachments/assets/5a8485f8-1c36-4582-bc08-2401e5cd4e3b)
 
 > If you wish to see a SW example of multiple channel SAADC without as much CPU involvement using PPI, check the following out: [🔗LINK](https://github.com/droidecahedron/nrf_adcppimulti/tree/main)
