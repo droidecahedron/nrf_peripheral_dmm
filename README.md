@@ -239,6 +239,7 @@ Flash your device.
 ## Step 10
 Connect to the log output com port. (*Make sure you've disconnected the 54L15DK from the board configurator and the serial port is free!*)
 - The default UART settings are `115200,8,n,1,N`. The VSC Extension GUI will give you a single button click for this in the top center of your screen after you click the 'connect' button.
+  
   ![image](https://github.com/user-attachments/assets/b42af1fa-e641-4601-a252-cc53a4a373c8)
 
   ![image](https://github.com/user-attachments/assets/a61ac40e-ef29-4cd0-a2f2-203306f9cb10)
