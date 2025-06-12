@@ -1,5 +1,5 @@
 # BLE
-## Progresion Path
+## Progression Path
 ```mermaid
 graph LR;
   main-->adc;
