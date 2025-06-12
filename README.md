@@ -27,7 +27,7 @@
       - Install Serial Terminal app
       - Install nPM PowerUP
       - Install Board Configurator
-
+- nRF Connect for Mobile ([Link](https://www.nordicsemi.com/Products/Development-tools/nRF-Connect-for-mobile)) for iOS/Android
 
 # Workshop Outline
   - Intro Slides / chalk talk
@@ -47,6 +47,22 @@
     - Hands on
    
 # Hands on
+## Goal and Progresion Path
+There are a few branches in this repo, here is the intended progression path for you as you walk through this workshop.
+```mermaid
+graph LR;
+  main*-->adc;
+  adc-->npm_powerup;
+  npm_powerup-->ipc;
+  ipc-->ble;
+```
+> `*` == your current location
+
+At a high level, we will write an application for the nRF54L15 SoC to read the analog output of each regulator on the nPM2100, then pipe that data via a BLE connection to our mobile devices. (So a little BLE Multimeter)
+
+This workshop assumes you've at least completed the first two lessons of the nRF Connect SDK Fundamentals in the Nordic DevAcademy.
+If you haven't, here is a link, but expect to be left behind! [🔗LINK](https://academy.nordicsemi.com/courses/nrf-connect-sdk-fundamentals/)
+
 ## Add the application to VSCode:
 - Clone this repo
 - Click on the nRF Connect icon in the left hand ribbon
@@ -65,3 +81,4 @@
 - Open nRF Connect for Desktop, and open the board configurator, and configure the 54L15DK to be 3V3 by changing the VDD option and selecting "Write config"
 ![image](https://github.com/user-attachments/assets/ddc51fd1-9996-4999-b422-17226a7ace9b)
   
+## Move to the ADC branch for the next set of instructions: [➡️LINK](https://github.com/droidecahedron/Teardown-2025/tree/adc)
