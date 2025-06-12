@@ -1,8 +1,15 @@
-<p align="center">
-  <img src="https://github.com/user-attachments/assets/f9970b40-8853-4226-a039-70d478c86104">
-</p>
-
 # nPM PowerUP
+## Progresion Path
+```mermaid
+graph LR;
+  main-->adc;
+  adc-->npm_powerup*;
+  npm_powerup*-->ipc;
+  ipc-->ble;
+```
+> `*` == your current location
+
+## Preface
 Now, we will work on using nPM PowerUP to control the regulators on the nPM2100-EK.
 
 # Step 1
@@ -41,10 +48,12 @@ Insert your provided battery into its corresponding battery holder, and insert t
 ![image](https://github.com/user-attachments/assets/638a1f73-b799-4566-9e14-6f80e32d2505)
 
 # Step 7
-As you change the configurations of these regulators, you should see those changes reflected in the terminal
+As you change the configurations of these regulators, you should see those changes reflected in the terminal from the nRF54's application!
 ```
 [00:01:07.015,270] <inf> main: CH0: 3072 mV
 [00:01:07.015,280] <inf> main: CH1: 808 mV
 [00:01:08.015,442] <inf> main: CH0: 3009 mV
 [00:01:08.015,447] <inf> main: CH1: 805 mV
 ```
+
+## Move to the ipc branch for the next set of instructions: [➡️LINK](https://github.com/droidecahedron/Teardown-2025/tree/ipc)
