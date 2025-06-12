@@ -1,8 +1,14 @@
-<p align="center">
-  <img src="https://github.com/user-attachments/assets/f9970b40-8853-4226-a039-70d478c86104">
-</p>
-
 # BLE
+## Progresion Path
+```mermaid
+graph LR;
+  main-->adc;
+  adc-->npm_powerup;
+  npm_powerup-->ipc;
+  ipc-->ble*;
+```
+> `*` == your current location
+## Preface
 In this section, we will add the final touch -- making our 54L15 device connectable via our smartphone so that we can see the nPM2100 regulator values in our phone instead of a terminal.
 
 > Note: if you recall from the block diagram in the first readme of the workshop, the 2100 is also a fuel gauge! So it is also feasible to add an i2c bus and be able to send the battery percentage to your phone, but that is not covered in this workshop.
@@ -10,9 +16,9 @@ In this section, we will add the final touch -- making our 54L15 device connecta
 
 We will also add a custom service. 
 
-! This section assumes a lot of working knowledge of BLE, if you wish to dive deeper or re-visit fundamentals, visit the following: [Nordic DevAcademy Bluetooth Low Energy Fundamentals](https://academy.nordicsemi.com/courses/bluetooth-low-energy-fundamentals/).
+! This section quickly goes over BLE sections quickly, if you wish to dive deeper or re-visit BLE fundamentals, visit the following: [🔗Nordic DevAcademy Bluetooth Low Energy Fundamentals](https://academy.nordicsemi.com/courses/bluetooth-low-energy-fundamentals/).
 
-# Step 1
+## Step 1
 Configure the project to enable BLE features.
 - in `prj.conf`, add the following lines:
 ```
@@ -25,7 +31,7 @@ CONFIG_BT_MAX_CONN=1
 ```
 As the comment notes, replace ZZZZZ with something unique to you to make scanning for your particular device easier.
 
-# Step 2
+## Step 2
 Add BLE libraries
 - Add the following `#includes` to `main.c`:
 ```c
@@ -36,7 +42,7 @@ Add BLE libraries
 #include <zephyr/bluetooth/uuid.h>
 ```
 
-# Step 3
+## Step 3
 Define a custom GATT service and characteristic UUIDs for collecting the regulator information.
 - Add the following close to the BLE thread `#define`s.
 ```c
@@ -53,7 +59,7 @@ Define a custom GATT service and characteristic UUIDs for collecting the regulat
 #define DEVICE_NAME_LEN (sizeof(DEVICE_NAME) - 1)
 ```
 
-# Step 4
+## Step 4
 Prepare advertising, scan response, and corresponding packets, as well as CCCD callback.
 - Add the following code after the defines:
 ```c
@@ -75,7 +81,7 @@ static const struct bt_data sd[] = {
 };
 ```
 
-# Step 5
+## Step 5
 Define GATT service and CCCD callback.
 - Add the following after step 4's code:
 ```c
@@ -106,7 +112,7 @@ BT_GATT_SERVICE_DEFINE(pmic_hub, BT_GATT_PRIMARY_SERVICE(BT_UUID_PMIC_HUB),
                        BT_GATT_CCC(on_cccd_changed, BT_GATT_PERM_READ | BT_GATT_PERM_WRITE), );
 ```
 
-# Step 6
+## Step 6
 Add Bluetooth connection callbacks and globals to handle the various states and actions the peripheral requires.
 This also uses [Kernel Work Queues](https://docs.zephyrproject.org/latest/kernel/services/threads/workqueue.html) for the process of starting advertising.
 One of the globals that will be particularly for us later in the code is the connection handle.
@@ -165,7 +171,7 @@ struct bt_conn_cb connection_callbacks = {
 };
 ```
 
-# Step 7
+## Step 7
 Since we've already gotten to the step that we can modify the regulator outputs with nPM PowerUP, and seen that those values are collected in the adc thread, then passed to the BLE Write thread, we will now add helper functions that will report the regulator values to the mobile device via notifications. 
 We also want to make sure that the mobile side is prepared to receive the notifications, so we can add some conditionals to help facilitate that.
 - Add the following functions:
@@ -211,7 +217,7 @@ static void ble_report_lsldo_mv(struct bt_conn *conn, const uint32_t *data, uint
 }
 ```
 
-# Step 8
+## Step 8
 Now we need to modify our `ble_write_thread` to send notifications *if* the device is connected!
 - Update the ble_write_thread to use the helper functions previously defined if there is a valid connection context. Here is a pasteable example:
 ```c
@@ -241,7 +247,7 @@ void ble_write_thread(void)
 }
 ```
 
-# Step 9
+## Step 9
 Now we need to have our main thread initialize BLE and get the show going!
 - Modify `main()` thread with BLE inits, initialization of the `k_work` item, and register the relevant callbacks. The main thread should look like the following:
 ```c
@@ -282,3 +288,41 @@ int main(void)
 }
 ```
 
+## Step 10 / Result
+From here, all the pieces are together, now we can flash it and see on our app!
+- Flash the device
+- Your log will say something like the following until you connect with your phone:
+  ```
+  [00:01:54.027,752] <inf> main: ADC Thread sent: Ch0=3072 mV, Ch1=805 mV
+  [00:01:54.027,777] <inf> main: BLE thread received: Ch0(BOOST)=3072 mV, Ch1(LDOLS)=805 mV
+  [00:01:54.027,797] <wrn> main: Warning, notification not enabled for boost mv characteristic
+  [00:01:54.027,812] <wrn> main: Warning, notification not enabled for lsldo mv characteristic
+  ```
+  Since we are not connected!
+- Open nRF Connect mobile app on your iOS or Android device
+- Press the dropdown for the scanner's Filter, enable 'name' filtering and enter `TEARDOWN_ZZZZZ`, where `ZZZZZ` is the unique identifier specific to you from step 1.
+- Connect
+  
+  <img src="https://github.com/user-attachments/assets/bd2ee1c0-cce7-4da7-b2b3-fc5bf15bd5cd" width=25% height=25%>
+- Navigate to the characteristics tab, enable notifications for the `757D0....` characteristic and the `B0057....` characteristic (Which are `LSLDO` and `BOOST` respectively) with the down arrow logo.
+- Change the number format with the `"` logo to int32 or uint32 depending on how you set up the helper functions.
+
+  <img src="https://github.com/user-attachments/assets/48f599f9-a29f-4a21-ba30-d43d39dabb11" width=25% height=25%>
+
+- Your phone should now be receiving the boost and ldo/ls regulator output voltages in mv, corresponding with your log and the gui! (Your log should also no longer be complaining about the lack of connection)
+
+  <img src="https://github.com/user-attachments/assets/d5c6dda3-74a9-41f9-8b15-2b007f5d94b2" width=25% height=25%>
+
+```
+[00:02:09.030,876] <inf> main: ADC Thread sent: Ch0=3002 mV, Ch1=805 mV
+[00:02:09.030,894] <inf> main: BLE thread received: Ch0(BOOST)=3002 mV, Ch1(LDOLS)=805 mV
+``` 
+
+## Congratulations! You finished!
+![image](https://github.com/user-attachments/assets/3dec1a74-baf5-4712-9472-629a97aa0c97) ![image](https://github.com/user-attachments/assets/5a8485f8-1c36-4582-bc08-2401e5cd4e3b)
+
+> If you wish to see a SW example of multiple channel SAADC without as much CPU involvement using PPI, check the following out: [🔗LINK](https://github.com/droidecahedron/nrf_adcppimulti/tree/main)
+> 
+> The nPM2100 is also a fuel gauge! The code of this workshop is very close to being able to give you a battery measurement.
+> 
+> If you want to see some examples on reading i2c information, piping it out over BLE, and being a lower power device, check the following out: [🔗LINK](https://github.com/droidecahedron/i2c_ble_peripheral/tree/main)
