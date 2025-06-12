@@ -4,9 +4,9 @@
 
 
 # Prerequisites and Required Material
-## Hardware (provided by Nordic)
+## Hardware
 - nRF54L15 DK
-  
+ 
   <img src="https://github.com/user-attachments/assets/a302e826-4cca-405f-9982-6da59a2ac740" width=15% height=15% >
 - nPM2100 EK
 
@@ -16,7 +16,12 @@
   <img src="https://github.com/user-attachments/assets/2121c4c3-cc36-45a3-8c62-b9a9f24ef1bd" width=10% height=10%>
 - AA Battery (other types work as well) 
 
-- Laptop 💻 **setup with software ahead of time**
+- 3x Female-Female jumper wires
+> ⬆️ All provided by Nordic, and you will keep upon completion of the workshop ⬆️
+
+- Bring your own laptop 💻 **setup with software ahead of time**
+
+
 
 ## Software
 > [!IMPORTANT]  
