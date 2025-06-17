@@ -73,7 +73,7 @@ graph LR;
 
 At a high level, we will write an application for the nRF54L15 SoC to read the analog output of each regulator on the nPM2100, then pipe that data via a BLE connection to our mobile devices. (So a little BLE Multimeter)
 
-This workshop assumes you've at least completed the first two lessons of the nRF Connect SDK Fundamentals in the Nordic DevAcademy.
+This workshop assumes you've at least completed the first lesson of the nRF Connect SDK Fundamentals in the Nordic DevAcademy.
 If you haven't, here is a link, but expect to be left behind! [🔗LINK](https://academy.nordicsemi.com/courses/nrf-connect-sdk-fundamentals/)
 
 ## Add the application to VSCode:
