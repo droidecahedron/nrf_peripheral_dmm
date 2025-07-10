@@ -75,6 +75,7 @@ The overlay will enable the adc node on the chip and define some of its paramete
 	};
 };
 ```
+- Save the `.overlay` file with your modifications.
 
 ## Step 2
 Configure the project and add the button and LED lib for the DK, logging, and ADC support.
@@ -224,13 +225,17 @@ K_THREAD_DEFINE(adc_sample_thread_id, ADC_THREAD_STACK_SIZE, adc_sample_thread, 
 ```
 
 ## Step 8
-Flash your device.
-- Click the following button to flash your detected DK.
+- Run a pristine build.
 
-  ![image](https://github.com/user-attachments/assets/2be936a5-993d-4532-a298-42b18650cf7b)
+<img width="192" height="113" alt="image" src="https://github.com/user-attachments/assets/f888af97-0c42-40ec-a270-0f91f60279ec" />
+
+- Flash your device. (Click the following button to flash your detected DK.)
+
+<img width="205" height="111" alt="image" src="https://github.com/user-attachments/assets/a3bd8b85-9c1c-4d3c-9a70-e034e76262f0" />
+
 
 ## Step 9
-Connect to the log output com port. (*Make sure you've disconnected the 54L15DK from the board configurator and the serial port is free!*)
+Connect to the log output com port with the connected devices pane. (*Make sure you've disconnected the 54L15DK from the board configurator and the serial port is free!*)
 - The default UART settings are `115200,8,n,1,N`. The VSC Extension GUI will give you a single button click for this in the top center of your screen after you click the 'connect' button.
   
   ![image](https://github.com/user-attachments/assets/b42af1fa-e641-4601-a252-cc53a4a373c8)
@@ -254,3 +259,4 @@ You should have an LED toggle every two seconds after flashing, and when you con
 
 
 ## Move to the npm_powerup branch for the next set of instructions: [➡️LINK](https://github.com/droidecahedron/nrf_peripheral_dmm/tree/npm_powerup)
+### Move to the adc_soln branch if you are stuck and need a lift: [🫱LINK](https://github.com/droidecahedron/nrf_peripheral_dmm/tree/adc_soln)
