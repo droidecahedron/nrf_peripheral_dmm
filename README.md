@@ -227,11 +227,12 @@ K_THREAD_DEFINE(adc_sample_thread_id, ADC_THREAD_STACK_SIZE, adc_sample_thread, 
 ## Step 8
 - Run a pristine build.
 
-<img width="161" height="58" alt="image" src="https://github.com/user-attachments/assets/5853a50c-d9e4-46d2-ba1c-c395a0da596d" />
+<img width="192" height="113" alt="image" src="https://github.com/user-attachments/assets/f888af97-0c42-40ec-a270-0f91f60279ec" />
 
 - Flash your device. (Click the following button to flash your detected DK.)
 
-<img width="234" height="163" alt="image" src="https://github.com/user-attachments/assets/e423befe-bfb1-4c11-bc71-3c5165d55931" />
+<img width="205" height="111" alt="image" src="https://github.com/user-attachments/assets/a3bd8b85-9c1c-4d3c-9a70-e034e76262f0" />
+
 
 ## Step 9
 Connect to the log output com port with the connected devices pane. (*Make sure you've disconnected the 54L15DK from the board configurator and the serial port is free!*)
