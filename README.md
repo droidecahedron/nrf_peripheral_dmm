@@ -1,5 +1,5 @@
 # BLE
-## Progresion Path
+## Progression Path
 ```mermaid
 graph LR;
   main-->adc;
@@ -26,7 +26,7 @@ Configure the project to enable BLE features.
 CONFIG_BT=y
 CONFIG_BT_PERIPHERAL=y
 # Replace ZZZZZ with a unique identifier to make scanning for advertisers easier
-CONFIG_BT_DEVICE_NAME="TEARDOWN_ZZZZZ_PMIC"
+CONFIG_BT_DEVICE_NAME="ZZZZZ_PMIC"
 CONFIG_BT_MAX_CONN=1
 ```
 As the comment notes, replace ZZZZZ with something unique to you to make scanning for your particular device easier.
@@ -300,26 +300,27 @@ From here, all the pieces are together, now we can flash it and see on our app!
   ```
   Since we are not connected!
 - Open nRF Connect mobile app on your iOS or Android device
-- Press the dropdown for the scanner's Filter, enable 'name' filtering and enter `TEARDOWN_ZZZZZ`, where `ZZZZZ` is the unique identifier specific to you from step 1.
+- Press the dropdown for the scanner's Filter, enable 'name' filtering and enter `ZZZZZ`, where `ZZZZZ` is the unique identifier specific to you from step 1. _(In the below screenshots, I have TEARDOWN appended to ZZZZZ, ultimately it does not matter what you choose, just that it's unique.)_
 - Connect
   
-  <img src="https://github.com/user-attachments/assets/bd2ee1c0-cce7-4da7-b2b3-fc5bf15bd5cd" width=25% height=25%>
+  <img src="https://github.com/user-attachments/assets/bd2ee1c0-cce7-4da7-b2b3-fc5bf15bd5cd" width="25%">
 - Navigate to the characteristics tab, enable notifications for the `757D0....` characteristic and the `B0057....` characteristic (Which are `LSLDO` and `BOOST` respectively) with the down arrow logo.
 - Change the number format with the `"` logo to int32 or uint32 depending on how you set up the helper functions.
 
-  <img src="https://github.com/user-attachments/assets/48f599f9-a29f-4a21-ba30-d43d39dabb11" width=25% height=25%>
+  <img src="https://github.com/user-attachments/assets/48f599f9-a29f-4a21-ba30-d43d39dabb11" width="25%">
 
 - Your phone should now be receiving the boost and ldo/ls regulator output voltages in mv, corresponding with your log and the gui! (Your log should also no longer be complaining about the lack of connection)
 
-  <img src="https://github.com/user-attachments/assets/d5c6dda3-74a9-41f9-8b15-2b007f5d94b2" width=25% height=25%>
+  <img src="https://github.com/user-attachments/assets/d5c6dda3-74a9-41f9-8b15-2b007f5d94b2" width="25%">
 
 ```
 [00:02:09.030,876] <inf> main: ADC Thread sent: Ch0=3002 mV, Ch1=805 mV
 [00:02:09.030,894] <inf> main: BLE thread received: Ch0(BOOST)=3002 mV, Ch1(LDOLS)=805 mV
 ``` 
 
-## Congratulations! You finished!
+## 🎊Congratulations! You are done!🎊
 ![image](https://github.com/user-attachments/assets/3dec1a74-baf5-4712-9472-629a97aa0c97) ![image](https://github.com/user-attachments/assets/5a8485f8-1c36-4582-bc08-2401e5cd4e3b)
+
 
 > If you wish to see a SW example of multiple channel SAADC without as much CPU involvement using PPI, check the following out: [🔗LINK](https://github.com/droidecahedron/nrf_adcppimulti/tree/main)
 > 
