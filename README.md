@@ -300,7 +300,7 @@ From here, all the pieces are together, now we can flash it and see on our app!
   ```
   Since we are not connected!
 - Open nRF Connect mobile app on your iOS or Android device
-- Press the dropdown for the scanner's Filter, enable 'name' filtering and enter `ZZZZZ`, where `ZZZZZ` is the unique identifier specific to you from step 1. _(In the below screenshots, I have TEARDOWN appended to ZZZZZ, ultimately it does not matter what you choose, just that it's unique.)_
+- Press the dropdown for the scanner's Filter, enable 'name' filtering and enter `ZZZZZ`, where `ZZZZZ` is the unique identifier specific to you from step 1. _(Ultimately it does not matter what you choose for a name, just that it's unique, and is sufficiently short.)_
 - Connect
   
   <img src="https://github.com/user-attachments/assets/bd2ee1c0-cce7-4da7-b2b3-fc5bf15bd5cd" width="25%">
