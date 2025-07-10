@@ -1,19 +1,24 @@
+# nrf_peripheral_dmm
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/f9970b40-8853-4226-a039-70d478c86104">
+  <br>
+  <img width="45%" height="707" alt="image" src="https://github.com/user-attachments/assets/fb81cc89-0e76-4a56-83be-ce0aa05e4439" />
+  </br>
+  An application/workshop on leveraging an nRF54L15DK to be a Bluetooth Low Energy (BLE) peripheral to read the analog outputs of an nPM2100EK's regulators and viewing them on your mobile device.
 </p>
+
 
 
 # Prerequisites and Required Material
 ## Hardware
 - nRF54L15 DK
  
-  <img src="https://github.com/user-attachments/assets/a302e826-4cca-405f-9982-6da59a2ac740" width=15% height=15% >
+  <img src="https://github.com/user-attachments/assets/a302e826-4cca-405f-9982-6da59a2ac740" width=15% >
 - nPM2100 EK
 
-   <img src="https://github.com/user-attachments/assets/b0fb8940-37a9-4051-812e-5c0ff0203e20" width=15% height=15% >
+   <img src="https://github.com/user-attachments/assets/b0fb8940-37a9-4051-812e-5c0ff0203e20" width=15% >
 - Nordic multi-USB cable x 2
 
-  <img src="https://github.com/user-attachments/assets/2121c4c3-cc36-45a3-8c62-b9a9f24ef1bd" width=10% height=10%>
+  <img src="https://github.com/user-attachments/assets/2121c4c3-cc36-45a3-8c62-b9a9f24ef1bd" width=10% >
 - AA Battery (other types work as well) 
 
 - 3x Female-Female jumper wires
