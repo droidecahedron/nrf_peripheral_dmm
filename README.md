@@ -19,7 +19,7 @@ The nRF54L15 sports a SAADC peripheral, or a differential successive approximati
   - 14-bit mode with a sample rate of 31.25 ksps
   - Oversampling mode with configurable sample rate
 - 8/10/12-bit resolution, 14-bit resolution with oversampling
-- Multiple analog inputs
+- Multiple analog inputs (up to eight input chs)
 - GPIO pins with analog function (input range 0 to VDD)
 - VDD (divided down to a valid range)
 - Up to eight input channels
@@ -35,23 +35,16 @@ The nRF54L15 sports a SAADC peripheral, or a differential successive approximati
 - Continuous sampling without the need of an external timer
 - On-the-fly limit checking
 
-![image](https://github.com/user-attachments/assets/5b1fc448-3f18-4582-b479-4c7959612e81)
-
-> Refresher on SAADC
 <p align="center">
-  <img src="https://sp-ao.shortpixel.ai/client/to_webp,q_glossy,ret_img,w_1280,h_1080/https://academy.nordicsemi.com/wp-content/uploads/2024/03/Successive-Approximation.gif" alt="animated" />
+  <img src="https://github.com/user-attachments/assets/5b1fc448-3f18-4582-b479-4c7959612e81" width="45%"/>
+  <img src="https://sp-ao.shortpixel.ai/client/to_webp,q_glossy,ret_img,w_1280,h_1080/https://academy.nordicsemi.com/wp-content/uploads/2024/03/Successive-Approximation.gif" width="45%" alt="animated" />
 </p>
 
-
 ## Step 1
-- Add a `boards/` directory to the Teardown-2025 directory.
-  
-![image](https://github.com/user-attachments/assets/a6bf140a-338c-41fd-af6c-af49152b7df6)
+- Navigate to the overlay file, called `nrf54l15dk_nrf54l15_cpuapp.overlay`, in the `boards/` directory.
+The overlay will enable the adc node on the chip and define some of its parameters.
+(If you need a refresher on devicetree: [LINK](https://academy.nordicsemi.com/courses/nrf-connect-sdk-fundamentals/lessons/lesson-2-reading-buttons-and-controlling-leds/topic/devicetree/))
 
-## Step 2
-Create an overlay file and save changes. The overlay will enable the adc node on the chip and define some of its parameters. (If you need a refresher on devicetree: [LINK](https://academy.nordicsemi.com/courses/nrf-connect-sdk-fundamentals/lessons/lesson-2-reading-buttons-and-controlling-leds/topic/devicetree/))
-
-- Create a devicetree overlay file in this directory, called `nrf54l15dk_nrf54l15_cpuapp.overlay`.
 - Add the following code to the overlay file. We will be using two AINs, so two channels, one per regulator output on the nPM2100.
 ```
 / {
@@ -83,7 +76,7 @@ Create an overlay file and save changes. The overlay will enable the adc node on
 };
 ```
 
-## Step 3
+## Step 2
 Configure the project and add the button and LED lib for the DK, logging, and ADC support.
 - Navigate to the main dir of the project, where `prj.conf` is located. This is the configuration file.
 - Add the following code to the `prj.conf` file and save the changes.
@@ -102,7 +95,7 @@ CONFIG_SYSTEM_WORKQUEUE_STACK_SIZE=2048
 CONFIG_MAIN_STACK_SIZE=2048
 ```
 
-## Step 4
+## Step 3
 Include libraries in our (mostly) empty `main.c` source file, and set up a logger module.
 - Navigate to `main.c` and add the following includes:
 ```c
@@ -122,7 +115,7 @@ LOG_MODULE_REGISTER(main, LOG_LEVEL_INF);
 #define BLE_STATE_LED DK_LED2
 ```
 
-## Step 5
+## Step 4
 Retrieve the API-specific device structure for the ADC channel
 - Add API specific dts structure. We'll also define some thread creation options and sleep interval here as well.
 ```c
@@ -138,7 +131,7 @@ static const struct adc_dt_spec adc_channels[] = {
     DT_FOREACH_PROP_ELEM(DT_PATH(zephyr_user), io_channels, DT_SPEC_AND_COMMA)};
 ```
 
-## Step 6
+## Step 5
 Add blinky to the main thread.
 - Modify `main()` to add some proof of life by blinking an LED.
 ```c
@@ -165,7 +158,7 @@ int main(void)
 
 
 
-## Step 7
+## Step 6
 Set up another thread to initialize and sample the ADC.
 
 - Add the adc thread function. Here, we will initialize the adc with the devicetree and sample it periodically, printing the output to the console.
@@ -221,7 +214,7 @@ void adc_sample_thread(void)
 }
 ```
 
-## Step 8
+## Step 7
 Create the ADC thread.
 - At the bottom of `main.c`, add the following snippet to define the thread.
 ```
@@ -230,13 +223,13 @@ K_THREAD_DEFINE(adc_sample_thread_id, ADC_THREAD_STACK_SIZE, adc_sample_thread, 
                 0, 0);
 ```
 
-## Step 9
+## Step 8
 Flash your device.
 - Click the following button to flash your detected DK.
 
   ![image](https://github.com/user-attachments/assets/2be936a5-993d-4532-a298-42b18650cf7b)
 
-## Step 10
+## Step 9
 Connect to the log output com port. (*Make sure you've disconnected the 54L15DK from the board configurator and the serial port is free!*)
 - The default UART settings are `115200,8,n,1,N`. The VSC Extension GUI will give you a single button click for this in the top center of your screen after you click the 'connect' button.
   
@@ -260,4 +253,4 @@ You should have an LED toggle every two seconds after flashing, and when you con
 ```
 
 
-## Move to the npm_powerup branch for the next set of instructions: [➡️LINK](https://github.com/droidecahedron/Teardown-2025/tree/npm_powerup)
+## Move to the npm_powerup branch for the next set of instructions: [➡️LINK](https://github.com/droidecahedron/nrf_peripheral_dmm/tree/npm_powerup)
