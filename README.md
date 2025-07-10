@@ -56,4 +56,4 @@ As you change the configurations of these regulators, you should see those chang
 [00:01:08.015,447] <inf> main: CH1: 805 mV
 ```
 
-## Move to the ipc branch for the next set of instructions: [➡️LINK](https://github.com/droidecahedron/Teardown-2025/tree/ipc)
+## Move to the ipc branch for the next set of instructions: [➡️LINK](https://github.com/droidecahedron/nrf_peripheral_dmm/tree/ipc)
