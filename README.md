@@ -86,16 +86,24 @@ If you haven't, here is a link, but expect to be left behind! [🔗LINK](https:/
 - Click on the nRF Connect icon in the left hand ribbon
 - Click on Open an existing application
 - Select the directory of this repository
-- Click Open:<br><img src="https://github.com/user-attachments/assets/4777afa9-32f5-4167-940f-13b3a8900b4d" width="500"/>
+- Click Open:
+<img width="929" height="394" alt="image" src="https://github.com/user-attachments/assets/3db707ad-9182-42a5-81ab-c2cc5a9897bd" />
+
 
 
 ## Under Applications at the bottom of the left pane 
 - Click on Add build configuration 
 - Select `nrf54l15dk/nrf54l15/cpuapp` as the board target
-- Click Build Configuration on the bottom right<br><img src="https://github.com/user-attachments/assets/059d9f1f-0baf-45f3-8678-daca7a731e24" width="500"/>
+- Choose the _Browse_ option for Base Devicetree Overlays and select the `nrf54l15dk_nrf54l15_cpuapp.overlay` file in the `boards/` child directory of the repository.
+- Click Build Configuration on the bottom right
+<br>
+  <img width="924" height="600" alt="image" src="https://github.com/user-attachments/assets/60b0d9fa-2bcd-41fd-9920-4fe24090221d" />
+</br>
+
+
 
 ## Set up the 54L15DK
-- Plug in your 54L15DK
+- Plug your 54L15DK into your machine.
 - Open nRF Connect for Desktop, and open the board configurator, and configure the 54L15DK to be 3V3 by changing the VDD option and selecting "Write config"
 ![image](https://github.com/user-attachments/assets/ddc51fd1-9996-4999-b422-17226a7ace9b)
   
