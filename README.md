@@ -75,6 +75,7 @@ The overlay will enable the adc node on the chip and define some of its paramete
 	};
 };
 ```
+- Save the `.overlay` file with your modifications.
 
 ## Step 2
 Configure the project and add the button and LED lib for the DK, logging, and ADC support.
@@ -224,7 +225,10 @@ K_THREAD_DEFINE(adc_sample_thread_id, ADC_THREAD_STACK_SIZE, adc_sample_thread, 
 ```
 
 ## Step 8
-Flash your device.
+- Run a pristine build.
+
+<img width="161" height="58" alt="image" src="https://github.com/user-attachments/assets/5853a50c-d9e4-46d2-ba1c-c395a0da596d" />
+- Flash your device.
 - Click the following button to flash your detected DK.
 
   ![image](https://github.com/user-attachments/assets/2be936a5-993d-4532-a298-42b18650cf7b)
