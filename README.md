@@ -234,7 +234,7 @@ K_THREAD_DEFINE(adc_sample_thread_id, ADC_THREAD_STACK_SIZE, adc_sample_thread, 
 <img width="234" height="163" alt="image" src="https://github.com/user-attachments/assets/e423befe-bfb1-4c11-bc71-3c5165d55931" />
 
 ## Step 9
-Connect to the log output com port. (*Make sure you've disconnected the 54L15DK from the board configurator and the serial port is free!*)
+Connect to the log output com port with the connected devices pane. (*Make sure you've disconnected the 54L15DK from the board configurator and the serial port is free!*)
 - The default UART settings are `115200,8,n,1,N`. The VSC Extension GUI will give you a single button click for this in the top center of your screen after you click the 'connect' button.
   
   ![image](https://github.com/user-attachments/assets/b42af1fa-e641-4601-a252-cc53a4a373c8)
