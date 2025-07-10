@@ -311,7 +311,7 @@ From here, all the pieces are together, now we can flash it and see on our app!
 
 - Your phone should now be receiving the boost and ldo/ls regulator output voltages in mv, corresponding with your log and the gui! (Your log should also no longer be complaining about the lack of connection)
 
-  <img src="https://github.com/user-attachments/assets/d5c6dda3-74a9-41f9-8b15-2b007f5d94b2" width=25% height=25%>
+  <img src="https://github.com/user-attachments/assets/d5c6dda3-74a9-41f9-8b15-2b007f5d94b2" width="25%">
 
 ```
 [00:02:09.030,876] <inf> main: ADC Thread sent: Ch0=3002 mV, Ch1=805 mV
