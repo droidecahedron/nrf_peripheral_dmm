@@ -229,8 +229,7 @@ K_THREAD_DEFINE(adc_sample_thread_id, ADC_THREAD_STACK_SIZE, adc_sample_thread, 
 
 <img width="161" height="58" alt="image" src="https://github.com/user-attachments/assets/5853a50c-d9e4-46d2-ba1c-c395a0da596d" />
 
-- Flash your device.
-- Click the following button to flash your detected DK.
+- Flash your device. (Click the following button to flash your detected DK.)
 
 <img width="234" height="163" alt="image" src="https://github.com/user-attachments/assets/e423befe-bfb1-4c11-bc71-3c5165d55931" />
 
