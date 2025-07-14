@@ -24,7 +24,7 @@
 - 3x Female-Female jumper wires
 > ⬆️ All above provided by Nordic, and you will keep upon completion of the workshop ⬆️
 
-- Bring your own laptop 💻 **setup with software ahead of time**
+- Bring your own laptop 💻 **set up with software ahead of time**
 
 
 
