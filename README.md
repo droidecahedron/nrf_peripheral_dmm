@@ -76,7 +76,14 @@ graph LR;
 ```
 > `*` == your current location
 
-At a high level, we will write an application for the nRF54L15 SoC to read the analog output of each regulator on the nPM2100, then pipe that data via a BLE connection to our mobile devices. (So a little BLE Multimeter)
+## High-level architecture
+At a high level, we will write an application for the nRF54L15 SoC  (using two ADC channels on the nRF54L15, one per regulator) to read the analog output of each regulator on the nPM2100, then pipe that data via a BLE connection to our mobile devices. 
+
+So a little peripheral BLE Multimeter. Using nPM PowerUP, we can control the regulator outputs of the nPM2100 PMIC, and see the regulator voltage measurements on our mobile device.
+
+<img width="652" height="330" alt="image" src="https://github.com/user-attachments/assets/ed698bd1-f302-4a61-bc7f-f9fe6fb9eed2" />
+
+
 
 This workshop assumes you've at least completed the first lesson of the nRF Connect SDK Fundamentals in the Nordic DevAcademy.
 If you haven't, here is a link, but expect to be left behind! [🔗LINK](https://academy.nordicsemi.com/courses/nrf-connect-sdk-fundamentals/)
