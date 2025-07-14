@@ -22,7 +22,7 @@
 - AA Battery (other types work as well) 
 
 - 3x Female-Female jumper wires
-> ⬆️ All provided by Nordic, and you will keep upon completion of the workshop ⬆️
+> ⬆️ All above provided by Nordic, and you will keep upon completion of the workshop ⬆️
 
 - Bring your own laptop 💻 **setup with software ahead of time**
 
