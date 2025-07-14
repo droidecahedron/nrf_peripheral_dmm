@@ -65,17 +65,6 @@
     - Hands on
    
 # Hands on
-## Goal and Progression Path
-There are a few branches in this repo, here is the intended progression path for you as you walk through this workshop.
-```mermaid
-graph LR;
-  main*-->adc;
-  adc-->npm_powerup;
-  npm_powerup-->ipc;
-  ipc-->ble;
-```
-> `*` == your current location
-
 ## High-level architecture
 At a high level, we will write an application for the nRF54L15 SoC  (using two ADC channels on the nRF54L15, one per regulator) to read the analog output of each regulator on the nPM2100, then pipe that data via a BLE connection to our mobile devices. 
 
@@ -86,6 +75,17 @@ So, a little BLE peripheral Multimeter. Using nPM PowerUP, we can change the reg
 
 This workshop assumes you've at least completed the first lesson of the nRF Connect SDK Fundamentals in the Nordic DevAcademy.
 If you haven't, here is a link, but expect to be left behind! [🔗LINK](https://academy.nordicsemi.com/courses/nrf-connect-sdk-fundamentals/)
+
+## Goal and Progression Path
+There are a few branches in this repo, here is the intended progression path for you as you walk through this workshop.
+```mermaid
+graph LR;
+  main*-->adc;
+  adc-->npm_powerup;
+  npm_powerup-->ipc;
+  ipc-->ble;
+```
+> `*` == your current location
 
 ## Add the application to VSCode:
 - Clone this repo
