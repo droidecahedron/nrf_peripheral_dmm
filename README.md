@@ -43,9 +43,10 @@ Insert your provided battery into its corresponding battery holder, and insert t
 ![image](https://github.com/user-attachments/assets/43b16b08-48fd-4226-82f5-91e82970d598)
 
 ## Step 7
-- Enable the LS/LDO, the boost should be defaulted to 3V and LDO should default to 800 mV
+- Enable the LDO, the boost should be defaulted to 3V and LDO should default to 800 mV
 
-![image](https://github.com/user-attachments/assets/638a1f73-b799-4566-9e14-6f80e32d2505)
+<img width="1065" height="509" alt="image" src="https://github.com/user-attachments/assets/f63eadfb-3da6-4c66-91dd-5eada0fa59b4" />
+
 
 ## Step 8
 As you change the configurations of these regulators, you should see those changes reflected in the terminal from the nRF54's application!
