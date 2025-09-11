@@ -326,6 +326,6 @@ From here, all the pieces are together, now we can flash it and see on our app!
 
 > If you wish to see a SW example of multiple channel SAADC without as much CPU involvement using PPI, check the following out: [🔗LINK](https://github.com/droidecahedron/nrf_adcppimulti/tree/main)
 > 
-> The nPM2100 is also a fuel gauge! The code of this workshop is very close to being able to give you a battery measurement.
+> The nPM2100 is also a fuel gauge! The code of this workshop is very close to being able to give you a battery measurement. You can see an example of that [here](https://github.com/droidecahedron/npm2100_nrf54l15_BFG).
 > 
 > If you want to see some examples on reading i2c information, piping it out over BLE, and being a lower power device, check the following out: [🔗LINK](https://github.com/droidecahedron/i2c_ble_peripheral/tree/main)
