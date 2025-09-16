@@ -217,7 +217,7 @@ void adc_sample_thread(void)
 
 ## Step 7
 Create the ADC thread.
-- At the bottom of `main.c`, add the following snippet to define the thread.
+- At the bottom of `main.c` file, add the following snippet to define the thread.
 ```
 // add a thread for SAADC sampling
 K_THREAD_DEFINE(adc_sample_thread_id, ADC_THREAD_STACK_SIZE, adc_sample_thread, NULL, NULL, NULL, ADC_THREAD_PRIORITY,
