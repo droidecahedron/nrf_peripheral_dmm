@@ -109,6 +109,8 @@ graph LR;
 </br>
 
 
+> [!NOTE]
+> If your `Generate and Build` button is greyed out while following these steps, try appending a space to the build directory name then deleting it. This may happen with the GUI on some machines.
 
 ## Set up the 54L15DK
 - Plug your 54L15DK into your machine.
