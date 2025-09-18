@@ -42,6 +42,9 @@ Insert your provided battery into its corresponding battery holder, and insert t
 
 ![image](https://github.com/user-attachments/assets/43b16b08-48fd-4226-82f5-91e82970d598)
 
+> [!NOTE]
+> The application may pop up a prompt to update the firmware for the EK upon the first connection. Confirm this FW update and allow it to complete before moving to the next step.
+
 ## Step 7
 - Enable the LDO, the boost should be defaulted to 3V and LDO should default to 800 mV
 
