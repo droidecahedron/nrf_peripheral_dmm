@@ -305,9 +305,15 @@ From here, all the pieces are together, now we can flash it and see on our app!
   
   <img src="https://github.com/user-attachments/assets/bd2ee1c0-cce7-4da7-b2b3-fc5bf15bd5cd" width="25%">
 - Navigate to the characteristics tab, enable notifications for the `757D0....` characteristic and the `B0057....` characteristic (Which are `LSLDO` and `BOOST` respectively) with the down arrow logo.
-- Change the number format with the `"` logo to uint32 (matching the data type of the helper functions). _If you are on android, the button should be the 3 down arrows, and long-tap the characteristic to change number format to a bit width integer matching your helper functions_
+- Change the number format with the `"` logo to uint32 (matching the data type of the helper functions).
 
-  <img src="https://github.com/user-attachments/assets/48f599f9-a29f-4a21-ba30-d43d39dabb11" width="25%">
+> [!NOTE]
+> If you are on android, the equivalent button icon is the 3 down arrows, and long-tap the characteristic to change number format to a bit width integer matching your helper functions. If you cannot format to int on your android device, the byte numbers are read as little endian.
+>
+> i.e. (0x)21-03 on the 757d011 characteristic translates to `0x321`, or decimal `801` mV.
+
+  <img src="https://github.com/user-attachments/assets/48f599f9-a29f-4a21-ba30-d43d39dabb11" width="25%"> <img width="403" height="401" alt="image" src="https://github.com/user-attachments/assets/7234727b-488b-49f1-ba1b-3f6a91d05391" />
+
 
 - Your phone should now be receiving the boost and ldo/ls regulator output voltages in mv, corresponding with your log and the gui! (Your log should also no longer be complaining about the lack of connection)
 
