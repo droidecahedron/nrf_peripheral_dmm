@@ -308,10 +308,9 @@ From here, all the pieces are together, now we can flash it and see on our app!
 - Change the number format with the `"` logo to uint32 (matching the data type of the helper functions).
 
 > [!NOTE]
-> If you are on android, long-tap the characteristic to change number format to a bit width integer matching your helper functions. If you cannot format to int on your android device, the byte numbers are read as little endian. i.e. `(0x)21-03` on the **757d011** characteristic translates to `0x321`, or decimal `801` mV.
+> If you are on android, long-tap the characteristic to change number format to a bit width integer matching your helper functions. If you cannot format to int on your android device, the byte numbers are read as little endian. For example, in the right image below showing the UI on Android, `(0x)21-03` on the **757d011** characteristic translates to `0x321`, or decimal `801` mV.
 
-  <img height="401" src="https://github.com/user-attachments/assets/48f599f9-a29f-4a21-ba30-d43d39dabb11" width="25%"> <img width="403" height="401" alt="image" src="https://github.com/user-attachments/assets/7234727b-488b-49f1-ba1b-3f6a91d05391" />
-
+  <img height="401" src="https://github.com/user-attachments/assets/48f599f9-a29f-4a21-ba30-d43d39dabb11" > <img width="403" height="401" alt="image" src="https://github.com/user-attachments/assets/7234727b-488b-49f1-ba1b-3f6a91d05391" />
 
 - Your phone should now be receiving the boost and ldo/ls regulator output voltages in mv, corresponding with your log and the gui! (Your log should also no longer be complaining about the lack of connection)
 
